@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from iqoptionapi.stable_api import IQ_Option
+import os
 
 app = Flask(__name__)
 
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     print("")
 
     app.run(
-        host="127.0.0.1",
-        port=5001,
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5001)),
         debug=False
     )
