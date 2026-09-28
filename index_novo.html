@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teste IQ Option</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .box {
+            max-width: 420px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.10);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eee;
+            border-radius: 6px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>Teste IQ Option</h1>
+
+    <label>E-mail</label>
+    <input
+        id="email"
+        type="email"
+        autocomplete="username"
+    >
+
+    <label>Senha</label>
+    <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+    >
+
+    <button onclick="login()">
+        CONECTAR
+    </button>
+
+    <div id="resultado">
+        Aguardando conexão...
+    </div>
+
+</div>
+
+<script>
+
+async function login() {
+
+    const resultado =
+        document.getElementById("resultado");
+
+    resultado.innerText =
+        "Conectando à IQ Option...";
+
+    try {
+
+        const response = await fetch("/login", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                email:
+                    document.getElementById("email").value,
+
+                password:
+                    document.getElementById("password").value
+
+            })
+
+        });
+
+        const data =
+            await response.json();
+
+        if (data.success) {
+
+            resultado.innerText =
+                "CONEXÃO REALIZADA!\n\n" +
+                "Conectado: " +
+                data.connected +
+                "\n\n" +
+                "Saldo: R$ " +
+                Number(data.balance)
+                    .toFixed(2)
+                    .replace(".", ",");
+
+        } else {
+
+            resultado.innerText =
+                "FALHA NA CONEXÃO\n\n" +
+                (data.reason ||
+                 data.error ||
+                 data.message ||
+                 "Erro desconhecido");
+
+        }
+
+    } catch (error) {
+
+        resultado.innerText =
+            "Erro de comunicação:\n\n" +
+            error;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+flask
+requests
+websocket-client==0.56
+git+https://github.com/iqoptionapi/iqoptionapi.git
